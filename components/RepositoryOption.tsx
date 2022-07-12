@@ -1,6 +1,11 @@
 import { FC } from 'react'
 import { Combobox } from '@headlessui/react'
-import { ChipIcon, InboxInIcon, StarIcon } from '@heroicons/react/outline'
+import {
+  ChipIcon,
+  InboxInIcon,
+  ShareIcon,
+  StarIcon,
+} from '@heroicons/react/outline'
 import { classNames } from './Example'
 import Image from 'next/image'
 
@@ -29,14 +34,7 @@ const RepositoryOption: FC = () => {
           </header>
 
           <footer className="flex items-center justify-between">
-            <div className="flex items-center">
-              {/* Language */}
-              <span className="flex items-center space-x-1">
-                <span className="block w-1.5 h-1.5 rounded-full bg-indigo-400" />
-                <span>TypeScript</span>
-              </span>
-            </div>
-            <div className="flex items-center space-x-2.5">
+            <div className="flex items-center space-x-2">
               {/* Owner */}
               <span className="flex items-center space-x-1">
                 <span className="w-4 h-4 rounded-full overflow-hidden">
@@ -50,6 +48,13 @@ const RepositoryOption: FC = () => {
                 </span>
                 <span className="font-medium">CaliCastle</span>
               </span>
+              {/* Language */}
+              <span className="flex items-center space-x-1">
+                <span className="block w-1.5 h-1.5 rounded-full bg-indigo-400" />
+                <span className="font-medium">TypeScript</span>
+              </span>
+            </div>
+            <div className="flex items-center space-x-2.5">
               {/* Stargazers */}
               <span className="flex items-center space-x-0.5">
                 <StarIcon className="w-4 h-4" />
@@ -59,6 +64,11 @@ const RepositoryOption: FC = () => {
               <span className="flex items-center space-x-0.5">
                 <InboxInIcon className="w-4 h-4" />
                 <span>99 issues</span>
+              </span>
+              {/* Forks */}
+              <span className="flex items-center space-x-0.5">
+                <ShareIcon className="w-4 h-4" />
+                <span>211 forks</span>
               </span>
             </div>
           </footer>
