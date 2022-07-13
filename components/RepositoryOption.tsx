@@ -12,7 +12,7 @@ import Image from 'next/image'
 const RepositoryOption: FC = () => {
   return (
     <Combobox.Option
-      value={'repository'}
+      value={'仓库名'}
       className={({ active }) =>
         classNames(
           'flex flex-col cursor-default select-none justify-center px-4 py-2 space-y-1.5',

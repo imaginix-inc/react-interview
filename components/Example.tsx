@@ -11,6 +11,7 @@ import RepositoryOption from './RepositoryOption'
  * 仓库数据的类型
  */
 type Repository = {
+  id: string
   name: string
   full_name: string
   open_issues_count: number
@@ -23,6 +24,8 @@ type Repository = {
     avatar_url: string
   }
 }
+
+type APIResponse = { items: Repository[] }
 
 /**
  * 将类名合并.
