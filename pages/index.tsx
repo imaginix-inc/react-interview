@@ -8,7 +8,7 @@ const Home: NextPage = () => {
   return (
     <>
       <Head>
-        <title>佐玩前端React面试</title>
+        <title>Zolplay React Interview Challenge</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
@@ -16,10 +16,9 @@ const Home: NextPage = () => {
         <Image
           src={bgImage}
           alt="Background"
-          layout="fill"
           quality={100}
-          objectFit="cover"
-          objectPosition="center"
+          fill
+          className='object-cover object-center'
         />
       </div>
 

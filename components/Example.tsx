@@ -1,11 +1,7 @@
-/*
-  这个文件是我们挑战题的入口文件
-*/
-import { Fragment, useEffect, useState } from 'react'
+import React from 'react'
 import { Combobox, Dialog, Transition } from '@headlessui/react'
-import { SearchIcon } from '@heroicons/react/solid'
-import { EmojiHappyIcon } from '@heroicons/react/outline'
-import RepositoryOption from './RepositoryOption'
+import { RepositoryOption } from './RepositoryOption'
+import { FaceSmileIcon, MagnifyingGlassIcon } from '@heroicons/react/20/solid'
 
 /**
  * 仓库数据的类型
@@ -27,18 +23,10 @@ type Repository = {
 
 type APIResponse = { items: Repository[] }
 
-/**
- * 将类名合并.
- * @param classes
- */
-export function classNames(...classes: any[]) {
-  return classes.filter(Boolean).join(' ')
-}
-
 export default function Example() {
-  const [open, setOpen] = useState(true)
+  const [open, setOpen] = React.useState(true)
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (!open) {
       setTimeout(() => {
         setOpen(true)
@@ -46,19 +34,19 @@ export default function Example() {
     }
   }, [open])
 
-  const [rawQuery, setRawQuery] = useState('')
+  const [rawQuery, setRawQuery] = React.useState('')
   const query = rawQuery.toLowerCase().replace(/^[#>]/, '')
 
   return (
     <Transition.Root
       show={open}
-      as={Fragment}
+      as={React.Fragment}
       afterLeave={() => setRawQuery('')}
       appear
     >
       <Dialog as="div" className="relative z-10" onClose={setOpen}>
         <Transition.Child
-          as={Fragment}
+          as={React.Fragment}
           enter="ease-out duration-300"
           enterFrom="opacity-0"
           enterTo="opacity-100"
@@ -71,7 +59,7 @@ export default function Example() {
 
         <div className="fixed inset-0 z-10 overflow-y-auto p-4 sm:p-6 md:p-20">
           <Transition.Child
-            as={Fragment}
+            as={React.Fragment}
             enter="ease-out duration-300"
             enterFrom="opacity-0 scale-95"
             enterTo="opacity-100 scale-100"
@@ -83,28 +71,28 @@ export default function Example() {
               <Combobox
                 value=""
                 onChange={(item) => {
-                  console.log('选中了', item)
+                  console.info('You have selected', item)
                 }}
               >
                 <div className="relative">
-                  <SearchIcon
+                  <MagnifyingGlassIcon
                     className="pointer-events-none absolute top-3.5 left-4 h-5 w-5 text-gray-500"
                     aria-hidden="true"
                   />
                   <Combobox.Input
                     className="h-12 w-full border-0 bg-transparent pl-11 pr-4 text-gray-100 placeholder-gray-500 focus:ring-0 sm:text-sm focus:outline-0"
-                    placeholder="搜索 GitHub 仓库..."
+                    placeholder="Search GitHub repos..."
                     onChange={(event) => setRawQuery(event.target.value)}
                   />
                 </div>
 
                 <Combobox.Options
                   static
-                  className="max-h-80 scroll-py-10 scroll-py-10 scroll-pb-2 scroll-pb-2 space-y-4 overflow-y-auto p-4 pb-2"
+                  className="max-h-80 scroll-py-10 scroll-pb-2 space-y-4 overflow-y-auto p-4 pb-2"
                 >
                   <li>
                     <h2 className="text-xs font-semibold text-gray-200">
-                      仓库列表
+                      Repositories
                     </h2>
                     <ul className="-mx-4 mt-2 text-sm text-gray-700 space-y-0.5">
                       <RepositoryOption />
@@ -114,8 +102,8 @@ export default function Example() {
                   </li>
                 </Combobox.Options>
                 <span className="flex flex-wrap items-center bg-slate-900/20 py-2.5 px-4 text-xs text-gray-400">
-                  <EmojiHappyIcon className="w-4 h-4 mr-1" />
-                  输入关键字来搜索查询相关的 GitHub 仓库
+                  <FaceSmileIcon className="w-4 h-4 mr-1" />
+                  Welcome to Zolplay&apos;s React Interview Challenge.
                 </span>
               </Combobox>
             </Dialog.Panel>
