@@ -12,7 +12,7 @@ export default async function handler(
 ) {
   const { q } = req.query as { q?: string }
   if (!q) {
-    res.status(400).json({ error: '无查询参数' })
+    res.status(400).json({ error: 'Query required' })
     return
   }
 
@@ -26,6 +26,6 @@ export default async function handler(
     const { items }: Data = await apiResponse.json()
     res.status(200).json({ items })
   } catch {
-    res.status(500).json({ error: '出错了' })
+    res.status(500).json({ error: 'Something went wrong' })
   }
 }
