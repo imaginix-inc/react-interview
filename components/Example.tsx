@@ -3,9 +3,6 @@ import { Combobox, Dialog, Transition } from '@headlessui/react'
 import { RepositoryOption } from './RepositoryOption'
 import { FaceSmileIcon, MagnifyingGlassIcon } from '@heroicons/react/20/solid'
 
-/**
- * 仓库数据的类型
- */
 type Repository = {
   id: string
   name: string
