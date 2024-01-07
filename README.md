@@ -19,3 +19,8 @@ The project is bootstrapped with [Next.js](https://nextjs.org/).
 pnpm i
 pnpm dev
 ```
+
+## Do the interview question
+
+1. Fork it
+2. Push the code to your own branch
