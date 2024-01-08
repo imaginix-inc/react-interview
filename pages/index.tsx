@@ -1,6 +1,6 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
-import Example from '../components/Example'
+import CoreFunction from '../components/CoreFunction'
 import Image from 'next/image'
 import bgImage from '../public/bg.jpg'
 
@@ -22,7 +22,7 @@ const Home: NextPage = () => {
         />
       </div>
 
-      <Example />
+      <CoreFunction />
     </>
   )
 }
