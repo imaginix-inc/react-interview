@@ -1,26 +1,27 @@
-# Zolplay React Interview Challenge
+# useToggle hook
 
-## About
+useToggle has a similar API to useState in that both return an array with the first item being the state and the second item being a way to update that state. However, unlike useState, useToggle's state value can only ever be a boolean.
 
-In this exercise, we will be building a simple React app that will allow us to search for GitHub repositories and display the results.
+```js
+const [on, setOn] = useToggle(true);
 
-The project is bootstrapped with [Next.js](https://nextjs.org/).
-
-## Tech Stack
-- [Next.js](https://nextjs.org/)
-- [React](https://reactjs.org/)
-- [TypeScript](https://www.typescriptlang.org/)
-- [Tailwind CSS](https://tailwindcss.com/)
-- [Headless UI](https://headlessui.dev/)
-
-## Set up for development
-
-```bash
-pnpm i
-pnpm dev
+setOn() // false
+setOn() // true
+setOn(false) // false
+setOn(true) // true
+setOn("state is still toggled") // false
 ```
 
-## Do the interview question
+For the full documentation, see [usehooks.com/usetoggle](https://usehooks.com/usetoggle).
 
-1. Fork it
-2. Push the code to your own branch
+## Tasks
+
+1. useToggle should correctly establish its initial value, casting it to a boolean if it's not one
+2. useToggle should toggle the state when its updater function is invoked without a value
+3. useToggle should set the state to the provided value when its updater function is called with a boolean value
+4. useToggle should not change the state when its updater function is called with the same boolean value
+5. useToggle should toggle the state when its updater function is called with a value that isn't a boolean
+
+## The result
+
+The final version of your app should look and behave like this https://usehooks.com/usetoggle.

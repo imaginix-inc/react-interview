@@ -1,0 +1,70 @@
+/* Your CSS goes here */
+
+section {
+  text-align: center;
+}
+
+button {
+  width: 100%;
+}
+
+.toggle {
+  cursor: pointer;
+  display: inline-block;
+  margin-top: 24px;
+}
+
+.toggle-switch {
+  display: inline-block;
+  background: var(--beige);
+  border-radius: 16px;
+  width: 58px;
+  height: 32px;
+  position: relative;
+  vertical-align: middle;
+  transition: background 0.25s;
+}
+.toggle-switch:before,
+.toggle-switch:after {
+  content: "";
+}
+.toggle-switch:before {
+  display: block;
+  background: var(--beige);
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.5);
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  transition: left 0.25s;
+}
+.toggle:hover .toggle-switch:before {
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.5);
+}
+
+.toggle-checkbox:checked + .toggle-switch {
+  background: var(--green);
+}
+
+.toggle-checkbox:checked + .toggle-switch:before {
+  left: 30px;
+}
+
+.toggle-checkbox {
+  position: absolute;
+  visibility: hidden;
+}
+
+.toggle-label {
+  margin-left: 5px;
+  position: relative;
+  top: 2px;
+}
+
+@media (min-width: 500px) {
+  button {
+    width: auto;
+  }
+}
