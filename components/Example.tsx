@@ -3,7 +3,7 @@ import { Combobox, Dialog, Transition } from '@headlessui/react'
 import { RepositoryOption } from './RepositoryOption'
 import { FaceSmileIcon, MagnifyingGlassIcon } from '@heroicons/react/20/solid'
 
-type Repository = {
+export type Repository = {
   id: string
   name: string
   full_name: string
@@ -19,9 +19,23 @@ type Repository = {
 }
 
 type APIResponse = { items: Repository[] }
+const req = {
+  search:async(query:string)=>{
+    return await(await fetch(`/api/search?q=${query}`)).json()
+  }
+}
 
 export default function Example() {
   const [open, setOpen] = React.useState(true)
+  const [items, setItems] = React.useState<APIResponse["items"]>([])
+  const handleSearchReq = async (query:string)=>{
+    const data = await req.search(query)
+    if (data.items && Array.isArray(data.items)){
+      setItems(data.items)
+    }else{
+      setItems([])
+    }
+  }
 
   React.useEffect(() => {
     if (!open) {
@@ -33,6 +47,10 @@ export default function Example() {
 
   const [rawQuery, setRawQuery] = React.useState('')
   const query = rawQuery.toLowerCase().replace(/^[#>]/, '')
+
+  React.useEffect(() => {
+    handleSearchReq(query)
+  }, [query])
 
   return (
     <Transition.Root
@@ -92,9 +110,9 @@ export default function Example() {
                       Repositories
                     </h2>
                     <ul className="-mx-4 mt-2 text-sm text-gray-700 space-y-0.5">
-                      <RepositoryOption />
-                      <RepositoryOption />
-                      <RepositoryOption />
+                    {items.map((item)=>{
+                      return <RepositoryOption data={item} key={item.id} />
+                    })}
                     </ul>
                   </li>
                 </Combobox.Options>
