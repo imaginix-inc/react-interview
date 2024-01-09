@@ -24,18 +24,29 @@ const req = {
     return await(await fetch(`/api/search?q=${query}`)).json()
   }
 }
+let timeoutId:number|null = null;
+const debounce = (callback:any, wait:number) => {
+  return (...args: any) => {
+    if (timeoutId){
+      window.clearTimeout(timeoutId);
+    }
+    timeoutId = window.setTimeout(() => {
+      callback(...args);
+    }, wait);
+  };
+}
 
 export default function Example() {
   const [open, setOpen] = React.useState(true)
   const [items, setItems] = React.useState<APIResponse["items"]>([])
-  const handleSearchReq = async (query:string)=>{
+  const handleSearchReq = debounce(async (query:string)=>{
     const data = await req.search(query)
     if (data.items && Array.isArray(data.items)){
       setItems(data.items)
     }else{
       setItems([])
     }
-  }
+  },400)
 
   React.useEffect(() => {
     if (!open) {
