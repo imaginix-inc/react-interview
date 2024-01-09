@@ -1,3 +1,5 @@
-# What did We Work on (WWW)
+# Change OpenAI response to streaming.
 
-The WWW is a regular report of Github activiy for your team
+http://sdk.vercel.ai/docs
+
+

@@ -1,54 +1,54 @@
-'use server'
+"use server";
 
-import {initSDK} from '@opensdks/core'
-import {githubSdkDef, type githubTypes} from '@opensdks/sdk-github'
-import {openaiSdkDef} from '@opensdks/sdk-openai'
+import { initSDK } from "@opensdks/runtime";
+import { githubSdkDef, type GithubSDKTypes } from "@opensdks/sdk-github";
+import { openaiSdkDef } from "@opensdks/sdk-openai";
 
-type Commit = githubTypes['components']['schemas']['commit']
+type Commit = GithubSDKTypes["components"]["schemas"]["commit"];
 
-const github = initSDK(githubSdkDef, {})
+const github = initSDK(githubSdkDef, {});
 
 export async function fetchCommits(prLink: string) {
-  const prUrl = new URL(prLink)
-  const [, owner, repo, , prNumber] = prUrl.pathname.split('/')
+  const prUrl = new URL(prLink);
+  const [, owner, repo, , prNumber] = prUrl.pathname.split("/");
 
   return github
-    .GET('/repos/{owner}/{repo}/pulls/{pull_number}/commits', {
+    .GET("/repos/{owner}/{repo}/pulls/{pull_number}/commits", {
       params: {
-        path: {owner, repo, pull_number: Number(prNumber)},
+        path: { owner, repo, pull_number: Number(prNumber) },
       },
     })
-    .then((r) => r.data)
+    .then((r) => r.data);
 }
 
-const apiKey = process.env['OPENAI_API_KEY']
+const apiKey = process.env["OPENAI_API_KEY"];
 //    ^?
 // TODO: throw type error if apiKey is not provided for ones that need. (hint for headers)
 const openai = initSDK(openaiSdkDef, {
   headers: {
-    'Content-Type': 'application/json',
-    Authorization: `Bearer ${apiKey}`,
+    "Content-Type": "application/json",
+    authorization: `Bearer ${apiKey}`,
   },
-})
+});
 
 export const summarizeCommits = async (commits: Commit[]) => {
-  const messages = commits.map((commit) => commit.commit.message).join('\n')
-  const prompt = `I have a list of software commit messages and need a summary of the changes. Here are the commit messages:\n${messages}\nCan you provide a summary?`
+  const messages = commits.map((commit) => commit.commit.message).join("\n");
+  const prompt = `I have a list of software commit messages and need a summary of the changes. Here are the commit messages:\n${messages}\nCan you provide a summary?`;
 
   try {
-    const response = await openai.POST('/chat/completions', {
+    const response = await openai.POST("/chat/completions", {
       body: {
-        model: 'gpt-3.5-turbo',
+        model: "gpt-3.5-turbo",
         max_tokens: 1000,
         messages: [
-          {role: 'system', content: prompt},
-          {role: 'user', content: messages},
+          { role: "system", content: prompt },
+          { role: "user", content: messages },
         ],
       },
-    })
-    return response.data.choices[0].message.content
+    });
+    return response.data.choices[0].message.content;
   } catch (err) {
-    console.error('Error summarizing commits:', err)
-    throw err
+    console.error("Error summarizing commits:", err);
+    throw err;
   }
-}
+};
