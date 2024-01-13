@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { Combobox, Dialog, Transition } from '@headlessui/react'
 import { RepositoryOption } from './RepositoryOption'
 import { FaceSmileIcon, MagnifyingGlassIcon } from '@heroicons/react/20/solid'
@@ -33,6 +33,28 @@ export default function Example() {
 
   const [rawQuery, setRawQuery] = React.useState('')
   const query = rawQuery.toLowerCase().replace(/^[#>]/, '')
+
+  const [items, setItems] = useState<Repository[]>([])
+
+  const fetchData = useCallback(() => {
+    if (!query) return
+
+    fetch('/api/search?q=' + query)
+      .then((res) => res.json())
+      .then((res: APIResponse) => {
+        setItems(res.items)
+      })
+  }, [query])
+
+  useEffect(() => {
+    if (!query) return
+    const handler = setTimeout(() => {
+      fetchData()
+    }, 500)
+    return () => {
+      clearTimeout(handler)
+    }
+  }, [query, fetchData])
 
   return (
     <Transition.Root
@@ -92,9 +114,9 @@ export default function Example() {
                       Repositories
                     </h2>
                     <ul className="-mx-4 mt-2 text-sm text-gray-700 space-y-0.5">
-                      <RepositoryOption />
-                      <RepositoryOption />
-                      <RepositoryOption />
+                      {items?.map((i) => {
+                        return <RepositoryOption key={i.id} item={i} />
+                      })}
                     </ul>
                   </li>
                 </Combobox.Options>
