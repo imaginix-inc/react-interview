@@ -3,7 +3,7 @@ import { Combobox, Dialog, Transition } from '@headlessui/react'
 import { RepositoryOption } from './RepositoryOption'
 import { FaceSmileIcon, MagnifyingGlassIcon } from '@heroicons/react/20/solid'
 
-type Repository = {
+export type Repository = {
   id: string
   name: string
   full_name: string
@@ -32,7 +32,33 @@ export default function Example() {
   }, [open])
 
   const [rawQuery, setRawQuery] = React.useState('')
-  const query = rawQuery.toLowerCase().replace(/^[#>]/, '')
+  const query = rawQuery.toLowerCase().replace(/^[#>]/, '').trim()
+  const [repositories, setRepositories] = React.useState<Repository[]>([])
+  const [isLoading, setIsLoading] = React.useState(false)
+
+  const fetchRepositories = React.useCallback(() => {
+    setIsLoading(true)
+
+    fetch(`/api/search?q=${query}`)
+      .then((res) => res.json())
+      .then((data: APIResponse) => {
+        setRepositories(data.items)
+        setIsLoading(false)
+      })
+  }, [query])
+
+  React.useEffect(() => {
+    if (!query) {
+      setRepositories([])
+      return
+    }
+
+    const debounceHandler = setTimeout(() => {
+      fetchRepositories()
+    }, 500)
+
+    return () => clearTimeout(debounceHandler)
+  }, [query, fetchRepositories])
 
   return (
     <Transition.Root
@@ -64,7 +90,7 @@ export default function Example() {
             leaveFrom="opacity-100 scale-100"
             leaveTo="opacity-0 scale-95"
           >
-            <Dialog.Panel className="mx-auto max-w-xl transform divide-y divide-gray-500 divide-opacity-20 overflow-hidden rounded-2xl shadow-slate-300/10 bg-slate-900/70 shadow-2xl ring-1 ring-sky-500 ring-opacity-5 backdrop-blur-xl backdrop-filter transition-all">
+            <Dialog.Panel className="mx-auto max-w-xl transform divide-y divide-gray-500 divide-opacity-20 overflow-hidden rounded-2xl bg-slate-900/70 shadow-2xl shadow-slate-300/10 ring-1 ring-sky-500 ring-opacity-5 backdrop-blur-xl backdrop-filter transition-all">
               <Combobox
                 value=""
                 onChange={(item) => {
@@ -73,11 +99,11 @@ export default function Example() {
               >
                 <div className="relative">
                   <MagnifyingGlassIcon
-                    className="pointer-events-none absolute top-3.5 left-4 h-5 w-5 text-gray-500"
+                    className="pointer-events-none absolute left-4 top-3.5 h-5 w-5 text-gray-500"
                     aria-hidden="true"
                   />
                   <Combobox.Input
-                    className="h-12 w-full border-0 bg-transparent pl-11 pr-4 text-gray-100 placeholder-gray-500 focus:ring-0 sm:text-sm focus:outline-0"
+                    className="h-12 w-full border-0 bg-transparent pl-11 pr-4 text-gray-100 placeholder-gray-500 focus:outline-0 focus:ring-0 sm:text-sm"
                     placeholder="Search GitHub repos..."
                     onChange={(event) => setRawQuery(event.target.value)}
                   />
@@ -91,15 +117,44 @@ export default function Example() {
                     <h2 className="text-xs font-semibold text-gray-200">
                       Repositories
                     </h2>
-                    <ul className="-mx-4 mt-2 text-sm text-gray-700 space-y-0.5">
-                      <RepositoryOption />
-                      <RepositoryOption />
-                      <RepositoryOption />
+                    <ul className="-mx-4 mt-2 space-y-0.5 text-sm text-gray-700">
+                      {repositories && repositories.length > 0 ? (
+                        repositories.map((repository, index) => (
+                          <RepositoryOption
+                            key={index}
+                            repositoryData={repository}
+                          />
+                        ))
+                      ) : isLoading ? (
+                        <div className='flex justify-center my-2'>
+                          <svg
+                            aria-hidden="true"
+                            className="h-8 w-8 animate-spin fill-gray-200 text-gray-200 dark:text-gray-600"
+                            viewBox="0 0 100 101"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
+                              fill="currentColor"
+                            />
+                            <path
+                              d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
+                              fill="currentFill"
+                            />
+                          </svg>
+                          <span className="sr-only">Loading...</span>
+                        </div>
+                      ) : (
+                        <span className="my-2 flex justify-center text-xs font-semibold text-gray-200">
+                          No repositories found.
+                        </span>
+                      )}
                     </ul>
                   </li>
                 </Combobox.Options>
-                <span className="flex flex-wrap items-center bg-slate-900/20 py-2.5 px-4 text-xs text-gray-400">
-                  <FaceSmileIcon className="w-4 h-4 mr-1" />
+                <span className="flex flex-wrap items-center bg-slate-900/20 px-4 py-2.5 text-xs text-gray-400">
+                  <FaceSmileIcon className="mr-1 h-4 w-4" />
                   Welcome to Zolplay&apos;s React Interview Challenge.
                 </span>
               </Combobox>
